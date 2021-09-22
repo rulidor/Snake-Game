@@ -307,6 +307,19 @@ void Graphics::BeginFrame()
 	memset( pSysBuffer,0u,sizeof( Color ) * Graphics::ScreenHeight * Graphics::ScreenWidth );
 }
 
+void Graphics::DrawRect(int x0, int y0, int x1, int y1, Color c)
+{
+	int initial_y0 = y0;
+	for (; x0 < x1; x0++) {
+		y0 = initial_y0;
+		for (; y0 < y1; y0++) {
+			PutPixel(x0, y0, c);
+
+		}
+
+	}
+}
+
 void Graphics::PutPixel( int x,int y,Color c )
 {
 	assert( x >= 0 );
