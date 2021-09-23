@@ -109,6 +109,11 @@ void Game::ComposeFrame()
 	goal.Draw(board);
 	if (gameIsOver) {
 		SpriteCodex::DrawGameOver(350, 265, gfx);
+		if (wnd.kbd.KeyIsPressed(VK_RETURN)) {
+			snake = Snake({ 2,2 });
+			goal = Goal(rng, board, snake);
+			gameIsOver = false;
+		}
 	}
 	board.DrawBorder();
 }
