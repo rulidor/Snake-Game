@@ -10,10 +10,11 @@ public:
 	void DrawCell(const Location& loc, Color c);
 	int GetGridWidth() const;
 	int GetGridHeight() const;
+	bool IsInsideBoard(const Location& loc) const;
 private:
 	static constexpr int dimension = 20; //cells of 20x20
-	static constexpr int width = 10;
-	static constexpr int height = 10;
+	static constexpr int width = 25;
+	static constexpr int height = 25;
 	Graphics& gfx;
 
 

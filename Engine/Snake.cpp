@@ -14,9 +14,17 @@ void Snake::MoveBy(const Location& delta_loc)
 	segments[0].MoveBy(delta_loc);
 }
 
+Location Snake::GetNextHeadLocation(const Location& delta_loc) const
+{
+	Location l(segments[0].GetLocation());
+	l.Add(delta_loc);
+	return l;
+}
+
 void Snake::Grow()
 {
 	if (segments_curr < nSegmentsMax) {
+		segments[segments_curr].InitBody();
 		segments_curr++;
 	}
 }
@@ -53,4 +61,9 @@ void Snake::Segment::MoveBy(const Location& delta_loc)
 void Snake::Segment::Draw(Board& board) const
 {
 	board.DrawCell(loc, c);
+}
+
+Location Snake::Segment::GetLocation() const
+{
+	return loc;
 }

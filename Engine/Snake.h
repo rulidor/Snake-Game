@@ -9,6 +9,7 @@ class Snake {
 public:
 	Snake(const Location& loc);
 	void MoveBy(const Location& delta_loc);
+	Location GetNextHeadLocation(const Location& delta_loc) const;
 	void Grow();
 	void Draw(Board& board) const;
 	
@@ -21,6 +22,7 @@ private:
 			void Follow(const Segment& next);
 			void MoveBy(const Location& delta_loc);
 			void Draw(Board& board) const;
+			Location GetLocation() const;
 
 		private:
 			Location loc;
