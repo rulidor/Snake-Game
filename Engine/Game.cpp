@@ -51,24 +51,31 @@ void Game::UpdateModel()
 	}
 	if (gameIsOver)
 		return;
+	Location temp_loc;
+
 	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		delta_loc = { 0, -1 };
+		if (! ( (temp_loc = { 0, 1 }) == delta_loc ) ) {
+			delta_loc = { 0, -1 };
+		}
 	}
 	else if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		delta_loc = { 0, 1 };
-
+		if (!((temp_loc = { 0, -1 }) == delta_loc)) {
+			delta_loc = { 0, 1 };
+		}
 	}
 	else if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		delta_loc = { -1, 0 };
-
+		if (!((temp_loc = { 1, 0 }) == delta_loc)) {
+			delta_loc = { -1, 0 };
+		}
 	}
 	else if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		delta_loc = { 1, 0 };
-
+		if (!((temp_loc = { -1, 0 }) == delta_loc)) {
+			delta_loc = { 1, 0 };
+		}
 	}
 
 	++snakeMoveCounter;
@@ -113,6 +120,10 @@ void Game::ComposeFrame()
 			snake = Snake({ 2,2 });
 			goal = Goal(rng, board, snake);
 			gameIsOver = false;
+			delta_loc = { 1, 0 };
+			snakeMovePeriod = 10; //initial: 10
+			snakeMoveCounter = 0;
+			snakeSpeedupCounter = 0;
 		}
 	}
 	board.DrawBorder();
