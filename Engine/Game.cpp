@@ -104,6 +104,7 @@ void Game::ComposeFrame()
 		SpriteCodex::DrawTitle(290, 225, gfx);
 		return;
 	}
+
 	snake.Draw(board);
 	goal.Draw(board);
 	if (gameIsOver) {
