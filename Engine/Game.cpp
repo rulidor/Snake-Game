@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include "Game.h"
 #include "Board.h"
+#include "SpriteCodex.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -28,7 +29,8 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	board(gfx),
 	rng(std::random_device()()),
-	snake({2, 2})
+	snake({2, 2}),
+	goal(rng, board, snake)
 {
 }
 
@@ -42,6 +44,11 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!gameIsStarted)
+	{
+		gameIsStarted = wnd.kbd.KeyIsPressed(VK_RETURN);
+		return;
+	}
 	if (gameIsOver)
 		return;
 	if (wnd.kbd.KeyIsPressed(VK_UP))
@@ -68,23 +75,39 @@ void Game::UpdateModel()
 	if (snakeMoveCounter >= snakeMovePeriod)
 	{
 		snakeMoveCounter = 0;
-		if (!board.IsInsideBoard(snake.GetNextHeadLocation(delta_loc))) {
+		const Location next = snake.GetNextHeadLocation(delta_loc);
+		if (!board.IsInsideBoard(next) || snake.IsInTileExceptEnd(next) ) {
 			gameIsOver = true;
 		}
 		else {
-			if (wnd.kbd.KeyIsPressed(VK_CONTROL)) {
+			const bool eating = (next == goal.GetLocation());
+			if (eating) {
 				snake.Grow();
 			}
 			snake.MoveBy(delta_loc);
+			if (eating) {
+				goal.Respawn(rng, board, snake);
+			}
 		}
+	}
+	++snakeSpeedupCounter;
+	if (snakeSpeedupCounter >= snakeSpeedupPeriod) {
+		snakeSpeedupCounter = 0;
+		snakeMovePeriod = std::max(snakeMovePeriod - 1, snakeMovePeriodMin);
 
 	}
 }
 
 void Game::ComposeFrame()
 {
-	snake.Draw(board);
-	if (gameIsOver) {
-
+	if (!gameIsStarted) {
+		SpriteCodex::DrawTitle(290, 225, gfx);
+		return;
 	}
+	snake.Draw(board);
+	goal.Draw(board);
+	if (gameIsOver) {
+		SpriteCodex::DrawGameOver(350, 265, gfx);
+	}
+	board.DrawBorder();
 }

@@ -3,6 +3,16 @@
 
 Snake::Snake(const Location& loc)
 {
+	constexpr int nBodyColors = 4;
+	constexpr Color bodyColors[nBodyColors] = {
+		{10, 100, 32},
+		{10, 130, 48},
+		{18, 160, 48},
+		{10, 130, 48}
+	};
+	for (int i = 0; i < nSegmentsMax; i++) {
+		segments[i].InitBody(bodyColors[i % nBodyColors]);
+	}
 	segments[0].InitHead(loc);
 }
 
@@ -24,7 +34,6 @@ Location Snake::GetNextHeadLocation(const Location& delta_loc) const
 void Snake::Grow()
 {
 	if (segments_curr < nSegmentsMax) {
-		segments[segments_curr].InitBody();
 		segments_curr++;
 	}
 }
@@ -36,15 +45,37 @@ void Snake::Draw(Board& board) const
 	}
 }
 
+bool Snake::IsInTileExceptEnd(const Location& target) const
+{
+	for (int i = 0; i < segments_curr -1; i++) {
+		if (segments[i].GetLocation() == target) {
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool Snake::IsInTile(const Location& target) const
+{
+	for (int i = 0; i < segments_curr; i++) {
+		if (segments[i].GetLocation() == target) {
+			return true;
+		}
+	}
+	return false;
+
+}
+
 void Snake::Segment::InitHead(const Location& in_loc)
 {
 	loc = in_loc;
 	c = Snake::headColor;
 }
 
-void Snake::Segment::InitBody()
+void Snake::Segment::InitBody(Color c_in)
 {
-	c = Snake::bodyColor;
+	c = c_in;
 }
 
 void Snake::Segment::Follow(const Segment& next)
@@ -63,7 +94,7 @@ void Snake::Segment::Draw(Board& board) const
 	board.DrawCell(loc, c);
 }
 
-Location Snake::Segment::GetLocation() const
+const Location& Snake::Segment::GetLocation() const
 {
 	return loc;
 }

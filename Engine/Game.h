@@ -26,6 +26,7 @@
 #include "Board.h"
 #include <random>
 #include "Snake.h"
+#include "Goal.h"
 
 class Game
 {
@@ -48,9 +49,14 @@ private:
 	Board board;
 	Snake snake;
 	Location delta_loc = { 1, 0 };
-	static constexpr int snakeMovePeriod = 20;
-	int snakeMoveCounter = 0;
-	bool gameIsOver = false;
 	std::mt19937 rng;
+	Goal goal;
+	static constexpr int snakeMovePeriodMin = 4; // frames per move
+	int snakeMovePeriod = 10; //initial: 20
+	int snakeMoveCounter = 0;
+	static constexpr int snakeSpeedupPeriod = 180; //2 seconds for 60 frames per second system
+	int snakeSpeedupCounter = 0;
+	bool gameIsOver = false;
+	bool gameIsStarted = false;
 	/********************************/
 };
